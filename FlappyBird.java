@@ -14,7 +14,7 @@ import javax.swing.Timer;
 public class FlappyBird implements ActionListener {
 
 	public static FlappyBird flappyBird;
-	public final int WIDTH = 800, HEIGHT = 800;
+	public final int WIDTH = 1200, HEIGHT = 800;
 	
 	public int ticks, yMotion;
 	public Renderer renderer;
@@ -93,6 +93,21 @@ public class FlappyBird implements ActionListener {
 			
 			yMotion += 2;
 		}
+		
+		
+		for(int i = 0 ; i<columns.size();i++) {
+			Rectangle column = columns.get(i);
+			if(column.x+column.width<0) {
+				
+				columns.remove(column);
+				if(column.y == 0) {
+					addColumn(false);
+					
+				}
+				
+			}
+			 
+		} //make add column infinite
 		
 		bird.y +=yMotion;
 		
