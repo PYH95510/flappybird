@@ -1,6 +1,7 @@
 package flappyBird;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -14,11 +15,12 @@ import javax.swing.Timer;
 public class FlappyBird implements ActionListener {
 
 	public static FlappyBird flappyBird;
-	public final int WIDTH = 1200, HEIGHT = 800;
+	public final int WIDTH = 800, HEIGHT = 800;
 	
 	public int ticks, yMotion;
 	public Renderer renderer;
 	public Rectangle bird;
+	public Boolean gameOver=false, started=false;
 	public ArrayList<Rectangle> columns;
 	public Random rand;
 	
@@ -82,34 +84,58 @@ public class FlappyBird implements ActionListener {
 		
 		ticks++;
 		int speed = 10;
-		
-		for(int i = 0 ; i<columns.size();i++) {
-			Rectangle column = columns.get(i);
-			column.x -= speed;
-			 
-		}
-		
-		if(ticks%2 == 0 && yMotion < 15) {
+		if(started) {
+			for(int i = 0 ; i<columns.size();i++) {
+				Rectangle column = columns.get(i);
+				column.x -= speed;
+				 
+			}// giving speed
 			
-			yMotion += 2;
-		}
-		
-		
-		for(int i = 0 ; i<columns.size();i++) {
-			Rectangle column = columns.get(i);
-			if(column.x+column.width<0) {
+			if(ticks%2 == 0 && yMotion < 15) {
 				
-				columns.remove(column);
-				if(column.y == 0) {
-					addColumn(false);
+				yMotion += 2;
+			}
+			
+			
+			for(int i = 0 ; i<columns.size();i++) {
+				Rectangle column = columns.get(i);
+				if(column.x+column.width<0) {
+					
+					columns.remove(column);
+					if(column.y == 0) {
+						addColumn(false);
+						
+					}
 					
 				}
-				
-			}
-			 
-		} //make add column infinite
+				 
+			} //make add column infinite
 		
-		bird.y +=yMotion;
+			bird.y +=yMotion;
+			
+			for(Rectangle column: columns) {
+				
+				if(column.intersects(bird)) {
+					
+					gameOver = true;
+					
+					bird.x = column.x - bird.width;
+				}
+			}
+			
+			if(bird.y >HEIGHT -120 || bird.y < 0) {
+				
+				gameOver = true;
+			}
+			
+			if(gameOver) {
+				bird.y = HEIGHT-120-bird.height;
+			}
+		
+		} //don't move until started
+		
+		
+	
 		
 		renderer.repaint();
 
@@ -134,6 +160,17 @@ public class FlappyBird implements ActionListener {
 			paintColumn(g, column);
 		}
 		
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial",1,100));
+		if(!gameOver) {
+			
+			g.drawString("Click to Start",75, HEIGHT/2-50);
+		}
+		
+		if(gameOver) {
+			
+			g.drawString("Game Over!",100, HEIGHT/2-50);
+		}
 		
 		
 	}
