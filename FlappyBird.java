@@ -148,8 +148,10 @@ public class FlappyBird implements ActionListener,MouseListener {
 			
 			for(Rectangle column: columns) {
 				
-				if(bird.x+bird.width/2 >column.x + column.width /2 -10 && bird.x + bird.width / 2 <column.x + column.width /2 +10) {
+				if(column.y == 0 && bird.x+bird.width/2 >column.x + column.width /2 -10 && bird.x + bird.width / 2 <column.x + column.width /2 +10) {
+					
 					score++;
+					
 				}
 				
 				if(column.intersects(bird)) {
